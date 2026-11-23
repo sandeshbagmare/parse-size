@@ -132,3 +132,24 @@ class TestFormat:
     def test_round_trip_of_a_formatted_size_keeps_the_value_close(self):
         size = 3 * 1024**3
         assert parse_size(format_size(size, binary=True, precision=1)) == size
+
+
+class TestRigour:
+    """Formatting corners: zero, precision and the suffixes list."""
+
+    @pytest.mark.parametrize("precision", [0, 1, 2, 6])
+    def test_zero_always_prints_as_zero(self, precision):
+        assert format_size(0, precision=precision).startswith("0 ")
+
+    def test_a_precision_wider_than_the_value(self):
+        assert format_size(1024, binary=True, precision=4) == "1 KiB"
+
+    def test_binary_and_decimal_suffixes_stay_apart(self):
+        assert format_size(1000) == "1 KB"
+        assert format_size(1024, binary=True) == "1 KiB"
+
+    def test_the_separator_can_be_removed(self):
+        assert format_size(2048, binary=True, space=False) == "2KiB"
+
+    def test_a_negative_size_keeps_its_sign(self):
+        assert format_size(-2048, binary=True) == "-2 KiB"

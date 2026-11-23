@@ -139,7 +139,7 @@ def format_size(
         text = f"{value:.{max(precision, 0)}f}"
         if "." in text:
             text = text.rstrip("0").rstrip(".")
-        if not text:
+        if not text:  # pragma: no cover - an int never rounds away to an empty string
             text = "0"
     separator = " " if space else ""
     return f"{sign}{text}{separator}{suffixes[index]}"
