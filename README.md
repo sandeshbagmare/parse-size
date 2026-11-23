@@ -1,26 +1,23 @@
-# parse-size
+<p align="center">
+  <img src="https://raw.githubusercontent.com/sandeshbagmare/parse-size/main/assets/banner.svg" width="100%" alt="parse-size: byte sizes in and out, MB and MiB never confused">
+</p>
 
-Parse and format byte sizes the way the IEC standard means them.
+<p align="center">
+  <a href="https://pypi.org/project/parse-size/"><img alt="PyPI version" src="https://img.shields.io/pypi/v/parse-size.svg"></a>
+  <a href="https://pypi.org/project/parse-size/"><img alt="Python versions" src="https://img.shields.io/pypi/pyversions/parse-size.svg"></a>
+  <a href="https://pypi.org/project/parse-size/"><img alt="Downloads" src="https://img.shields.io/pypi/dm/parse-size.svg"></a>
+  <a href="https://github.com/sandeshbagmare/parse-size/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/sandeshbagmare/parse-size/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/sandeshbagmare/parse-size/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/pypi/l/parse-size.svg"></a>
+  <a href="https://sandeshbagmare.github.io/parse-size/"><img alt="docs" src="https://img.shields.io/badge/docs-online-2ea44f.svg"></a>
+  <a href="https://pypi.org/project/parse-size/"><img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-2ea44f.svg"></a>
+</p>
 
-[![PyPI](https://img.shields.io/pypi/v/parse-size.svg)](https://pypi.org/project/parse-size/)
-[![Python](https://img.shields.io/pypi/pyversions/parse-size.svg)](https://pypi.org/project/parse-size/)
-[![tests](https://github.com/sandeshbagmare/parse-size/actions/workflows/ci.yml/badge.svg)](https://github.com/sandeshbagmare/parse-size/actions/workflows/ci.yml)
-[![license](https://img.shields.io/pypi/l/parse-size.svg)](https://github.com/sandeshbagmare/parse-size/blob/main/LICENSE)
+<h3 align="center">byte sizes in and out, MB and MiB never confused</h3>
+<p align="center"><em>Standard library only. No runtime dependencies. Python 3.9+.</em></p>
 
-```python
->>> from parse_size import format_size, parse_size
->>> parse_size("512")
-512
->>> parse_size("1.5 MB"), parse_size("1.5 MiB")
-(1500000, 1572864)
->>> format_size(1536, binary=True), format_size(1_234_567, precision=2)
-('1.5 KiB', '1.23 MB')
-```
-
-The usual bug is mixing the two families: `MB` is 1000² bytes, `MiB` is 1024². A parser
-that treats both as 1024 silently accepts a `10 MB` upload limit that is 4.8% larger than
-what the help text promises. This library keeps them apart, and formats with the matching
-suffix.
+<p align="center">
+  <img src="https://raw.githubusercontent.com/sandeshbagmare/parse-size/main/assets/how.svg" width="720" alt="how parse-size fits in">
+</p>
 
 ## Install
 

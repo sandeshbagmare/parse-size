@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>parse-size — byte sizes in and out, MB and MiB never confused</title>
+<meta name="description" content="Byte sizes in and out, mb and mib never confused. Standard library only, Python 3.9+.">
+<meta property="og:title" content="parse-size — byte sizes in and out, MB and MiB never confused">
+<meta property="og:description" content="Byte sizes in and out, mb and mib never confused. Standard library only, Python 3.9+.">
+<meta property="og:image" content="https://raw.githubusercontent.com/sandeshbagmare/parse-size/main/assets/banner.svg">
+<meta property="og:type" content="website">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<style>
+  :root {
+    --bg: hsl(150 45% 8%);
+    --ink: #e6edf6;
+    --muted: #9fb0c6;
+    --line: hsl(150 35% 26%);
+    --accent: hsl(190 88% 66%);
+    --soft: hsl(190 92% 80%);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.65 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  a { color: var(--soft); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  header {
+    position: sticky; top: 0; z-index: 9; display: flex; gap: 18px; align-items: center;
+    padding: 14px 24px; background: rgba(8, 12, 20, 0.86); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  header .mark { width: 26px; height: 26px; }
+  header strong { font-family: ui-monospace, monospace; letter-spacing: 0.02em; }
+  header nav { margin-left: auto; display: flex; gap: 16px; font-size: 14px; }
+  .hero { max-width: 1180px; margin: 0 auto; padding: 18px 20px 0; }
+  .hero img { width: 100%; border-radius: 14px; box-shadow: 0 18px 50px rgba(0,0,0,0.45); }
+  main { max-width: 900px; margin: 0 auto; padding: 28px 20px 80px; }
+  h1, h2, h3, h4 { line-height: 1.25; }
+  h2 { margin-top: 44px; padding-top: 18px; border-top: 1px solid var(--line); }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.92em;
+    background: rgba(148, 163, 184, 0.15); padding: 1px 5px; border-radius: 5px;
+  }
+  pre.code {
+    position: relative; background: #070b12; border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px; overflow-x: auto;
+  }
+  pre.code code { background: none; padding: 0; font-size: 14px; }
+  pre .lang {
+    position: absolute; top: 8px; right: 12px; font-size: 11px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 15px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; }
+  img { max-width: 100%; }
+  blockquote {
+    margin: 18px 0; padding: 4px 16px; border-left: 3px solid var(--accent);
+    color: var(--muted);
+  }
+  footer {
+    border-top: 1px solid var(--line); padding: 26px 20px; color: var(--muted);
+    font-size: 14px; text-align: center;
+  }
+</style>
+</head>
+<body>
+<header>
+  <img class="mark" src="../assets/logo.svg" alt="">
+  <strong>parse-size</strong>
+  <nav>
+    <a href="https://pypi.org/project/parse-size/">PyPI</a>
+    <a href="https://github.com/sandeshbagmare/parse-size">GitHub</a>
+    <a href="https://github.com/sandeshbagmare/parse-size/issues">Issues</a>
+    <a href="https://github.com/sandeshbagmare/parse-size/blob/main/CHANGELOG.md">Changelog</a>
+  </nav>
+</header>
+<div class="hero"><img src="../assets/banner.svg" alt="parse-size"></div>
+<main>
+<p align="center">
+  <img src="../assets/how.svg" width="720" alt="how parse-size fits in">
+</p>
+<h2>Install</h2>
+<pre class="code"><span class="lang">console</span><code>pip install parse-size</code></pre>
+<h2>Use</h2>
+<pre class="code"><span class="lang">python</span><code>from parse_size import SizeParseError, format_size, parse_size
+
+parse_size(&quot;10 MB&quot;)                    # 10_000_000
+parse_size(&quot;10MiB&quot;)                    # 10_485_760
+parse_size(&quot;2 gigabytes&quot;)              # 2_000_000_000
+parse_size(&quot;5&quot;, default_unit=&quot;MiB&quot;)    # 5_242_880
+parse_size(&quot;-1 MB&quot;, allow_negative=True)
+
+format_size(1_500_000)                       # &#x27;1.5 MB&#x27;
+format_size(1_234_567, precision=0)          # &#x27;1 MB&#x27;  (rounded, not truncated)
+format_size(1_500_000, space=False)          # &#x27;1.5MB&#x27;
+format_size(1_234_567, precision=None)       # &#x27;1.234567 MB&#x27;  (exact)
+format_size(3 * 1024**3, binary=True)        # &#x27;3 GiB&#x27;</code></pre>
+<p>A common argparse pair:</p>
+<pre class="code"><span class="lang">python</span><code>parser.add_argument(&quot;--max-size&quot;, type=parse_size, default=&quot;10 MB&quot;)
+parser.add_argument(&quot;--pretty&quot;, action=&quot;store_true&quot;)
+# --max-size 1.5GiB  →  1610612736</code></pre>
+<h2>Rules</h2>
+<table><thead><tr>
+<th>suffix</th>
+<th>factor</th>
+<th></th>
+<th>suffix</th>
+<th>factor</th>
+</tr></thead><tbody>
+<tr><td>------</td><td>------</td><td>-</td><td>------</td><td>------</td></tr>
+<tr><td><code>B</code></td><td>1</td><td></td><td><code>KiB</code></td><td>1024</td></tr>
+<tr><td><code>KB</code></td><td>1000</td><td></td><td><code>MiB</code></td><td>1024²</td></tr>
+<tr><td><code>MB</code></td><td>1000²</td><td></td><td><code>GiB</code></td><td>1024³</td></tr>
+<tr><td><code>GB</code></td><td>1000³</td><td></td><td><code>TiB</code></td><td>1024⁴</td></tr>
+<tr><td><code>TB</code></td><td>1000⁴</td><td></td><td><code>PiB</code></td><td>1024⁵</td></tr>
+<tr><td><code>PB</code></td><td>1000⁵</td><td></td><td></td><td></td></tr>
+</tbody></table>
+<ul>
+<li>single-letter aliases (<code>K</code>, <code>M</code>, <code>G</code>, <code>T</code>, <code>P</code>) are decimal, as in <code>dd</code> and <code>ls -h</code></li>
+<li>long names work in singular or plural (<code>megabyte</code>, <code>megabytes</code>, <code>mebibytes</code>)</li>
+<li>case does not matter, whitespace and underscores inside the value do not matter</li>
+<li>fractions round half up to whole bytes, so <code>0.0005 kB</code> is 1 byte</li>
+<li>a bare number is read in <code>default_unit</code> (<code>B</code> unless you say otherwise)</li>
+<li>negative values raise unless <code>allow_negative=True</code></li>
+</ul>
+<h2>Limits</h2>
+<ul>
+<li>No <code>%</code> of a total, no ranges and no "as much as fits" — just one value.</li>
+<li><code>format_size</code> tops out at petabytes; larger values keep growing in <code>PB</code>.</li>
+<li>Human-readable output follows IEC suffixes only, never <code>K</code>/<code>M</code> shorthand.</li>
+</ul>
+<h2>Development</h2>
+<pre class="code"><span class="lang">console</span><code>python -m venv .venv
+.venv/bin/pip install -e &quot;.[test]&quot;
+.venv/bin/pytest</code></pre>
+<h2>License</h2>
+<p>MIT.</p>
+</main>
+<footer>
+  parse-size · MIT · standard library only ·
+  <a href="https://github.com/sandeshbagmare/parse-size">source</a> ·
+  <a href="https://pypi.org/project/parse-size/">pip install parse-size</a>
+</footer>
+</body>
+</html>
